@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人脸检测系统</title>
+    <style>
+        #video-container {
+            width: 854px;/* 854 480 */
+            height: 480px;
+            margin: 20px auto;
+            position: relative;
+            border: 1px solid #ccc;
+        }
+        #mode-toggle1, #mode-toggle2,#mode-toggle3 {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #runMess {
+            width: 500px;  /* 控制宽度 */
+            height: 30px; /* 控制高度 */
+            display: block; /* 设置为块级元素 */
+            margin-left: auto; /* 左边距自动 */
+            margin-right: auto; /* 右边距自动 */
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div id="video-container">
+            <img src="{{ url_for('video_feed0') }}" alt="" width="100%">
+        </div>
+        <button id="mode-toggle1">切换模式1：静默活体检测</button>
+        <button id="mode-toggle2">切换模式2：眨眼检测</button>
+        <button id="mode-toggle3">结束签到</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#mode-toggle1").click(function() {
+                $.getJSON('/change_mode1', function(data) {
+                    console.log(data);
+                });
+            });
+
+            $("#mode-toggle2").click(function() {
+                $.getJSON('/change_mode2', function(data) {
+                    console.log(data);
+                });
+            });
+            $("#mode-toggle3").click(function() {
+                $.getJSON('/writeqiandaobiao', function(data) {
+                    console.log(data);
+                });
+            });
+        });
+    </script>
+            <div>
+                <form method="POST">
+                    <textarea class="editor_text" id="runMess" name="RunMessage" rows="15" cols="40">{{ text }}</textarea>
+            </div>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+            $(document).ready(function() {
+                setInterval(function() {  // 每隔一段时间执行一次
+                    $.getJSON('/get_text', function(data) {  // 发送请求到服务器
+                        $('#runMess').val(data.text);  // 更新<textarea>的内容
+                    });
+                }, 1000);  // 1000毫秒（1秒）
+            });
+            </script> 
+</body>
+</html>
